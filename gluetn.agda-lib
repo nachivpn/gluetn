@@ -1,0 +1,6 @@
+name: gluetn
+depend:
+  standard-library
+  agda-categories
+include :
+  src
