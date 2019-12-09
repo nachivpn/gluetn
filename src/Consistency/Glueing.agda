@@ -23,6 +23,7 @@ Gl {a ⇒ b} f = ∀ (x : ⟦ a ⟧) → Gl x
   × Gl (f ∙' x)
 Gl {a + b} (inj₁ x) = Gl x
 Gl {a + b} (inj₂ y) = Gl y
+Gl {𝟙}     tt       = ⊤
 
 -- application for glued values
 appg : {f : ⟦ a ⇒ b ⟧} {x : ⟦ a ⟧}
@@ -89,6 +90,8 @@ gl Inl x xg = refl , xg
 gl Inr x xg = refl , xg
 gl (Case) f fg = refl , λ g gg →
   refl , λ s sg → hom-case {s = s} fg gg sg , caseg {s = s} fg gg sg
+gl Init  x xg = ⊥-elim x
+gl Unit = tt
 
 -- normalization is consistent with reduction (_⟶*_)
 -- or, loosely speaking, `norm` transforms by reduction
@@ -104,6 +107,8 @@ consistent-red* (t ∙ u) = trans
 consistent-red* Inl  = refl
 consistent-red* Inr  = refl
 consistent-red* Case = refl
+consistent-red* Unit = refl
+consistent-red* Init = refl
 
 -- normalization is consistent with conversion
 consistent : (t : Tm a) → t ≈ em (norm t)

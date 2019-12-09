@@ -1,6 +1,9 @@
 module Dec where
 
 open import CLT
+open import Norm
+open import Soundness
+open import Completeness
 
 open import Relation.Nullary using (Dec ; yes ; no)
 open import Relation.Binary.PropositionalEquality
@@ -10,10 +13,6 @@ open import Relation.Binary.PropositionalEquality
 private
   variable
     a b c : Ty
-
-open Norm
-open Soundness
-open Completeness
 
 -- syntactic equality of types is decidable
 ≡-ty-dec : Dec (a ≡ b)
@@ -49,6 +48,22 @@ open Completeness
 ≡-ty-dec {a + a₁} {b + b₁} | yes p | no ¬q = no (λ { ≡-refl → ¬q ≡-refl})
 ≡-ty-dec {a + a₁} {b + b₁} | no ¬p | yes q = no (λ { ≡-refl → ¬p ≡-refl})
 ≡-ty-dec {a + a₁} {b + b₁} | no ¬p | no ¬q = no (λ { ≡-refl → ¬q ≡-refl})
+≡-ty-dec {𝟘} {𝟘} = yes ≡-refl
+≡-ty-dec {𝟘} {𝟙} = no (λ ())
+≡-ty-dec {𝟘} {Nat} = no (λ ())
+≡-ty-dec {𝟘} {b ⇒ b₁} = no (λ ())
+≡-ty-dec {𝟘} {b + b₁} = no (λ ())
+≡-ty-dec {𝟙} {𝟘} = no (λ ())
+≡-ty-dec {𝟙} {𝟙} = yes ≡-refl
+≡-ty-dec {𝟙} {Nat} = no (λ ())
+≡-ty-dec {𝟙} {b ⇒ b₁} = no (λ ())
+≡-ty-dec {𝟙} {b + b₁} = no (λ ())
+≡-ty-dec {Nat} {𝟘} = no (λ ())
+≡-ty-dec {Nat} {𝟙} = no (λ ())
+≡-ty-dec {a ⇒ a₁} {𝟘} = no (λ ())
+≡-ty-dec {a ⇒ a₁} {𝟙} = no (λ ())
+≡-ty-dec {a + a₁} {𝟘} = no (λ ())
+≡-ty-dec {a + a₁} {𝟙} = no (λ ())
 
 -- Impl of ≡-nf-dec
 ≡-nf-dec Zero Zero = yes ≡-refl
@@ -174,3 +189,17 @@ open Completeness
 ... | yes p | yes q = yes (cong₂ Case∙∙ p q)
 ... | yes p | no ¬p = no λ { ≡-refl → ¬p ≡-refl }
 ... | no ¬p | _     = no λ { ≡-refl → ¬p ≡-refl }
+≡-nf-dec K Init = no (λ ())
+≡-nf-dec (K∙ n) Init = no (λ ())
+≡-nf-dec (S∙∙ n n₁) Init = no (λ ())
+≡-nf-dec Rec Init = no (λ ())
+≡-nf-dec Inl Init = no (λ ())
+≡-nf-dec Inr Init = no (λ ())
+≡-nf-dec Unit Unit = yes ≡-refl
+≡-nf-dec Init K = no (λ ())
+≡-nf-dec Init (K∙ m) = no (λ ())
+≡-nf-dec Init (S∙∙ m m₁) = no (λ ())
+≡-nf-dec Init Rec = no (λ ())
+≡-nf-dec Init Inl = no (λ ())
+≡-nf-dec Init Inr = no (λ ())
+≡-nf-dec Init Init = yes ≡-refl

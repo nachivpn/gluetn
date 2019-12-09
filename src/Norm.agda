@@ -16,6 +16,8 @@ private
 ⟦  Nat  ⟧ = ℕ
 ⟦ a ⇒ b ⟧ = Nf (a ⇒ b) × (⟦ a ⟧ → ⟦ b ⟧)
 ⟦ a + b ⟧ = ⟦ a ⟧ ⊎ ⟦ b ⟧
+⟦   𝟘   ⟧ = ⊥
+⟦   𝟙   ⟧ = ⊤
 
 -- reify values in the model to normal forms
 reify : ⟦ a ⟧ → Nf a
@@ -24,6 +26,7 @@ reify {Nat}   (suc x)  = Succ∙ (reify x)
 reify {a ⇒ b} (t , _)  = t
 reify {a + b} (inj₁ x) = Inl∙ (reify x)
 reify {a + b} (inj₂ y) = Inr∙ (reify y)
+reify {𝟙}      tt      = Unit
 
 -- "quote" values in the model into terms
 -- p.s. cannot be named "quote" since it's an Agda keyword
@@ -66,28 +69,9 @@ eval (Case)  = Case , λ f →
   Case∙ (reify f) , λ g →
     Case∙∙ (reify f) (reify g) , λ s →
       case' f g s
+eval Init = Init , ⊥-elim
+eval Unit = tt
 
 -- normalization function
 norm : Tm a → Nf a
 norm t = reify (eval t)
-
--- norm is idempotent on normal forms
-stability : (n : Nf a) → norm (em n) ≡ n
-stability Zero = ≡-refl
-stability Succ = ≡-refl
-stability (Succ∙ n) = cong Succ∙ (stability n)
-stability K = ≡-refl
-stability (K∙ n) = cong K∙ (stability n)
-stability S = ≡-refl
-stability (S∙ n) = cong S∙ (stability n)
-stability (S∙∙ m n) = cong₂ S∙∙ (stability m) (stability n)
-stability Rec = ≡-refl
-stability (Rec∙ n) = cong Rec∙ (stability n)
-stability (Rec∙∙ m n) = cong₂ Rec∙∙ (stability m) (stability n)
-stability Inl = ≡-refl
-stability Inr = ≡-refl
-stability (Inl∙ n) = cong Inl∙ (stability n)
-stability (Inr∙ n) = cong Inr∙ (stability n)
-stability Case = ≡-refl
-stability (Case∙ n) = cong Case∙ (stability n)
-stability (Case∙∙ m n) = cong₂ Case∙∙ (stability m) (stability n)

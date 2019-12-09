@@ -4,8 +4,10 @@ open import Data.Nat
   using (ℕ ; zero ; suc) public
 open import Data.Unit
   using (⊤ ; tt) public
+open import Data.Empty
+  using (⊥ ; ⊥-elim) public
 open import Data.Product
-  using (∃ ; Σ ; _×_ ; _,_)
+  using (∃ ; ∃₂ ; Σ ; _×_ ; _,_)
   renaming (proj₁ to π₁ ; proj₂ to π₂) public
 open import Relation.Nullary
   using (¬_) public

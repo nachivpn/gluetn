@@ -14,6 +14,7 @@ infixl 6 _+_
 infixr 5 _⇒_
 
 data Ty : Set where
+  𝟘 𝟙 : Ty
   Nat : Ty
   _⇒_ _+_ : Ty →  Ty → Ty
 
@@ -34,6 +35,8 @@ data Tm : Ty → Set where
   Inl  : Tm (a ⇒ a + b)
   Inr  : Tm (b ⇒ a + b)
   Case : Tm ((a ⇒ c) ⇒ (b ⇒ c) ⇒ (a + b) ⇒ c)
+  Init : Tm (𝟘 ⇒ a)
+  Unit : Tm 𝟙
 
 -- NOTE: The presentation of System T here takes after a
 -- Hilbert-style proof system for intuitionistic propositional logic
@@ -107,6 +110,9 @@ data Nf : Ty → Set where
   Case   : Nf ((a ⇒ c) ⇒ (b ⇒ c) ⇒ (a + b) ⇒ c)
   Case∙  : Nf (a ⇒ c) → Nf ((b ⇒ c) ⇒ (a + b) ⇒ c)
   Case∙∙ : Nf (a ⇒ c) → Nf (b ⇒ c) → Nf (a + b ⇒ c)
+  -- Unit and Init
+  Unit   : Nf 𝟙
+  Init   : Nf (𝟘 ⇒ a)
 
 -- embed normal forms to terms
 em : Nf a → Tm a
@@ -128,6 +134,8 @@ em (Inr∙ n)     = Inr ∙ em n
 em Case         = Case
 em (Case∙ n)    = Case ∙ (em n)
 em (Case∙∙ m n) = Case ∙ (em m) ∙ (em n)
+em Unit         = Unit
+em Init         = Init
 
 module Utilities where
 

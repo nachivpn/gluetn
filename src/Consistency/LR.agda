@@ -26,6 +26,7 @@ R {a + b} t (inj₁ x)
   = ∃ (λ u → R u x × t ⟶* Inl ∙ u)
 R {a + b} t (inj₂ y)
   = ∃ (λ u → R u y × t ⟶* Inr ∙ u)
+R {𝟙}     t v = t ⟶* quot v
 
 -- R implies reduction by _⟶*_ (by reifying the value on right)
 -- (the whole purpose of R!)
@@ -36,6 +37,7 @@ R-reduces {Nat}   p       = p
 R-reduces {a ⇒ b} (p , _) = p
 R-reduces {a + b} {x = inj₁ _} (_ , q , r) = trans r (app* refl (R-reduces q))
 R-reduces {a + b} {x = inj₂ _} (_ , q , r) = trans r (app* refl (R-reduces q))
+R-reduces {𝟙} p = p
 
 -- Note: Due to `R-reduces`, we may simply
 -- say "t reduces to v" for `R t v`
@@ -54,6 +56,8 @@ R-resp-≈ {_ + _} {x = inj₁ _} p (u , q , r)
   = u , q , trans p r
 R-resp-≈ {_ + _} {x = inj₂ _} p (u , q , r)
   = u , q , trans p r
+R-resp-≈ {𝟙} p q
+  = trans p q
 
 -- syntactic application reduces to semantic application
 R-app : {t : Tm (a ⇒ b)} {f : ⟦ a ⇒ b ⟧}
@@ -119,6 +123,8 @@ fund Case = refl , λ p →
   app* refl (R-reduces p) , λ q →
     (app* (app* refl (R-reduces p)) (R-reduces q)) , λ r →
       R-case p q r
+fund Unit = refl
+fund Init = refl , λ {_} {bot} x → ⊥-elim bot
 
 -- proof of consistency by R
 
