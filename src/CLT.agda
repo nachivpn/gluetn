@@ -62,12 +62,6 @@ data _⟶_ : Tm a → Tm a → Set where
     → (Case ∙ f ∙ g ∙ (Inl ∙ s)) ⟶ (f ∙ s)
   redr : {s : Tm b} {f : Tm (a ⇒ c)} {g : Tm (b ⇒ c)}
     → (Case ∙ f ∙ g ∙ (Inr ∙ s)) ⟶ (g ∙ s)
-  inl  : {t t' : Tm a}
-    → t ⟶ t'
-    → (Inl {a} {b} ∙ t) ⟶ (Inl ∙ t')
-  inr  : {t t' : Tm b}
-    → t ⟶ t'
-    → (Inr {b} {a} ∙ t) ⟶ (Inr ∙ t')
 
 -- NOTE: The relation _⟶_ is *not* deterministic
 -- since we can make a choice when we encounter `App`

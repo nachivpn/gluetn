@@ -42,9 +42,7 @@ nfDoesntReduce (Rec∙∙ m n) (app1 p) = nfDoesntReduce (Rec∙ m) p
 nfDoesntReduce Inl ()
 nfDoesntReduce Inr ()
 nfDoesntReduce (Inl∙ n) (app2 p) = nfDoesntReduce n p
-nfDoesntReduce (Inl∙ n) (inl p) = nfDoesntReduce n p
 nfDoesntReduce (Inr∙ n) (app2 p) = nfDoesntReduce n p
-nfDoesntReduce (Inr∙ n) (inr p) = nfDoesntReduce n p
 nfDoesntReduce Case ()
 nfDoesntReduce (Case∙ n) (app2 p) = nfDoesntReduce n p
 nfDoesntReduce (Case∙∙ m n) (app1 p) = nfDoesntReduce (Case∙ m) p

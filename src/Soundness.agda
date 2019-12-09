@@ -20,10 +20,6 @@ sound-red (app2 {t = t} p)
   = cong (λ x → (eval t) ∙' x) (sound-red p)
 sound-red redl = ≡-refl
 sound-red redr = ≡-refl
-sound-red (inl p)
-  = cong inj₁ (sound-red p)
-sound-red (inr p)
-  = cong inj₂ (sound-red p)
 
 -- soundness of conversion in the model
 sound : {t t' : Tm a} → t ≈ t' → eval t ≡ eval t'
