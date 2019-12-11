@@ -52,11 +52,21 @@ nfDoesntReduce (Case∙∙ m n) (app2 p) = nfDoesntReduce n p
 weakNorm : ∀ (t : Tm a) → WeakNorm t
 weakNorm t = em (norm t) , consistent-red* _ , nfDoesntReduce _
 
--- church-rosser (diamond) property
+-----------------------------------
+-- Church-rosser (diamond) property
+-----------------------------------
+
+-- Convergence relation between two terms
+-- which states that they reduce to some common term
+Converge : (t t' : Tm a) → Set
+Converge t t' =  ∃ λ v → (t ⟶* v) × (t' ⟶* v)
+
+-- If t reduces to u and t reduces to u' then,
+-- u and u' reduce to the same term eventually
 church-rosser : {t u u' : Tm a}
   → t ⟶* u
   → t ⟶* u'
-  → ∃ λ v → (u ⟶* v) × (u' ⟶* v)
+  → Converge u u'
 church-rosser {u = u} {u'} p q
   = em (norm u)
   , consistent-red* u

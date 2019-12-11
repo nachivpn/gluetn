@@ -8,7 +8,7 @@ private
   variable
     a b c : Ty
 
--- soundness of reduction in the model
+-- soundness of (single-step) reduction in the model
 sound-red : {t t' : Tm a} → t ⟶ t' → eval t ≡ eval t'
 sound-red redk = ≡-refl
 sound-red reds = ≡-refl
@@ -20,6 +20,11 @@ sound-red (app2 {t = t} p)
   = cong (λ x → (eval t) ∙' x) (sound-red p)
 sound-red redl = ≡-refl
 sound-red redr = ≡-refl
+
+-- soundness of (multi-step) reduction in the model
+sound-red* : {t t' : Tm a} → t ⟶* t' → eval t ≡ eval t'
+sound-red* refl = ≡-refl
+sound-red* (x ◅ p) = ≡-trans (sound-red x) (sound-red* p)
 
 -- soundness of conversion in the model
 sound : {t t' : Tm a} → t ≈ t' → eval t ≡ eval t'

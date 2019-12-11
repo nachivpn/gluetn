@@ -1,14 +1,14 @@
 module Dec where
 
+open import Lib
 open import CLT
 open import Norm
 open import Soundness
 open import Completeness
+open import Consistency.Glueing
 
 open import Relation.Nullary using (Dec ; yes ; no)
-open import Relation.Binary.PropositionalEquality
-  using (_≡_ ; cong ; cong₂ ; subst)
-  renaming (refl to ≡-refl ; trans to ≡-trans ; sym to ≡-sym)
+open import WeakNorm using (Converge)
 
 private
   variable
@@ -22,13 +22,32 @@ private
 ≡-nf-dec : (n n' : Nf a) → Dec (n ≡ n')
 -- (below)
 
----------------------------------------
--- convertibility of terms is decidable
----------------------------------------
+--------------------------------------
+-- Are two terms t and t' convertible?
+--------------------------------------
 ≈-tm-dec : (t t' : Tm a) → Dec (t ≈ t')
 ≈-tm-dec t t' with (≡-nf-dec (norm t) (norm t'))
 ≈-tm-dec t t' | yes p = yes (unique-nf-back p)
 ≈-tm-dec t t' | no ¬p = no (λ { q → ¬p (unique-nf-forth q) })
+
+------------------------------------------------------------
+-- Do two terms t and t' reduce to the same term eventually?
+------------------------------------------------------------
+Converge-tm-dec : (t t' : Tm a) → Dec (Converge t t')
+Converge-tm-dec t t' with (≡-nf-dec (norm t) (norm t'))
+... | yes p = yes (converges p)
+  where
+  -- Terms which have the same normal form reduce to the same term
+  converges : {t t' : Tm a} → norm t ≡ norm t' → Converge t t'
+  converges {t = t} {t'} p
+    = em (norm t)
+    , consistent-red* t
+    , trans (consistent-red* t') (≡→⟶* (cong em (≡-sym p)))
+... | no ¬p = no λ { (u , q , r)
+  → ¬p (cong reify (≡-trans (sound-red* q) (≡-sym (sound-red* r)))) }
+
+
+-- NOTE: Definitions of ≡-ty-dec and ≡-nf-dec below---nothing interesting.
 
 -- Impl of ≡-ty-dec
 ≡-ty-dec {Nat} {Nat} = yes ≡-refl

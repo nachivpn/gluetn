@@ -181,9 +181,14 @@ module Utilities where
   app (bwd x ◅ p) (bwd y ◅ q)
     = trans (bwd (app1 x) ◅ bwd (app2 y) ◅ refl) (app p q)
 
+  -- syntactically identical terms are reducible (to each other)
+  ≡→⟶* : {t t' : Tm a} → t ≡ t' → t ⟶* t'
+  ≡→⟶* ≡-refl = refl
+
   -- syntactically identical terms are convertible
   ≡→≈ : {t t' : Tm a} → t ≡ t' → t ≈ t'
-  ≡→≈ ≡-refl = refl
+  ≡→≈ p = ⟶*→≈ (≡→⟶* p)
+
 
 open Utilities public
 
