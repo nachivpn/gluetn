@@ -20,6 +20,8 @@ open import Relation.Binary.Construct.Closure.ReflexiveTransitive
 open import Relation.Binary.Construct.Closure.Equivalence
   using (EqClosure ; symmetric)
   renaming (isEquivalence to EqClosureIsEquivalence) public
+open import Relation.Binary.Construct.Closure.Symmetric
+  using (fwd; bwd) public
 open import Data.Sum
   using (_⊎_ ; inj₁ ; inj₂) public
 open import Data.Sum
