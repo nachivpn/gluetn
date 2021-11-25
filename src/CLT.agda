@@ -207,6 +207,6 @@ module SetoidUtil where
   Tms a ._≈ₑ_     = _≈_
   Tms a .isEquivalence = EqClosureIsEquivalence _⟶_
 
-  open import Relation.Binary.SetoidReasoning public
+  open import Relation.Binary.Reasoning.MultiSetoid public
 
 open SetoidUtil public
